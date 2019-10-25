@@ -71,10 +71,7 @@ class Stack:
         return prev_head.value
 
     def __iter__(self):
-        """Iterates over the stack, top-to-bottom
-
-        :return: Stack
-        """
+        """Iterates over the stack, top-to-bottom"""
 
         self._cursor = self._head
         return self
