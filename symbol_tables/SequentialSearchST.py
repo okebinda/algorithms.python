@@ -1,4 +1,4 @@
-"""Symbol Table: SequentialSearchST"""
+"""Symbol Table: Sequential Search"""
 
 
 class SequentialSearchST:

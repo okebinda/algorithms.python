@@ -1,4 +1,4 @@
-"""Symbol Table: BinarySearchST"""
+"""Symbol Table: Binary Search"""
 
 
 class BinarySearchST:
