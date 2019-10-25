@@ -203,6 +203,10 @@ if __name__ == "__main__":
             self.assertEqual(7, len(self.st))
             self.assertEqual("Letter A", self.st['a'])
 
+            self.st['s'] = "Character S"
+            self.assertEqual(7, len(self.st))
+            self.assertEqual("Character S", self.st['s'])
+
         def test_getitem(self):
             self.assertEqual("Letter S", self.st['s'])
             self.assertEqual("Letter M", self.st['m'])
