@@ -25,8 +25,8 @@ class LinearProbingHashST:
         self._prime = prime
         self._scale = randrange(self._prime - 1) + 1
         self._shift = randrange(self._prime)
-        self._keys = [None for _ in range(self._m - 1)]
-        self._values = [None for _ in range(self._m - 1)]
+        self._keys = [None] * (self._m - 1)
+        self._values = [None] * (self._m - 1)
         self._n = 0
 
     def __len__(self):

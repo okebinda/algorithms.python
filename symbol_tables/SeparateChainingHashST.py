@@ -17,7 +17,7 @@ class SeparateChainingHashST:
         """
 
         self._m = m
-        self._st = [SequentialSearchST() for _ in range(self._m)]
+        self._st = [None] * self._m
         self._n = 0
 
     def __len__(self):
@@ -58,9 +58,12 @@ class SeparateChainingHashST:
         :param value: Any data value
         """
 
+        h = self._hash(key)
+        if self._st[h] is None:
+            self._st[h] = SequentialSearchST()
         if key not in self:
             self._n += 1
-        self._st[self._hash(key)][key] = value
+        self._st[h][key] = value
 
     def __getitem__(self, key):
         """Retrieves the value of the element with a given key if it exists
@@ -71,7 +74,10 @@ class SeparateChainingHashST:
         :raises: KeyError
         """
 
-        return self._st[self._hash(key)][key]
+        h = self._hash(key)
+        if self._st[h] is None:
+            raise KeyError("Key `{}` not found.".format(key))
+        return self._st[h][key]
 
     def __delitem__(self, key):
         """Removes the element with the given key if it exists
@@ -81,7 +87,10 @@ class SeparateChainingHashST:
         :raises: KeyError
         """
 
-        del self._st[self._hash(key)][key]
+        h = self._hash(key)
+        if self._st[h] is None:
+            raise KeyError("Key `{}` not found".format(key))
+        del self._st[h][key]
         self._n -= 1
 
     def __contains__(self, key):
@@ -93,7 +102,10 @@ class SeparateChainingHashST:
         :rtype: bool
         """
 
-        return True if self._st[self._hash(key)] else False
+        h = self._hash(key)
+        if self._st[h] is None:
+            return False
+        return True if self._st[h] else False
 
     def __iter__(self):
         """Iterates over the symbol table, order is not preserved. Generates
