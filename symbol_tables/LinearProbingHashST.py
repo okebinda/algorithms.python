@@ -1,5 +1,7 @@
 """Symbol Table: Linear Probing Hash"""
 
+from random import randrange
+
 
 class LinearProbingHashST:
     """A symbol table with key:value pairs implemented using a hash function on
@@ -10,16 +12,21 @@ class LinearProbingHashST:
     collisions are handled by incrementing the hash index by one until an empty
     slot is found."""
 
-    def __init__(self, cap=16):
+    def __init__(self, cap=16, prime=1797432803):
         """LinearProbingHashST constructor
 
-        :param cap: Size of internal list
+        :param cap: Size of internal list (one will be subtracted)
         :type cap: int
+        :param prime: A large prime number, used for hash distribution
+        :type prime: int
         """
 
         self._m = cap
-        self._keys = [None for _ in range(self._m)]
-        self._values = [None for _ in range(self._m)]
+        self._prime = prime
+        self._scale = randrange(self._prime - 1) + 1
+        self._shift = randrange(self._prime)
+        self._keys = [None for _ in range(self._m - 1)]
+        self._values = [None for _ in range(self._m - 1)]
         self._n = 0
 
     def __len__(self):
@@ -49,7 +56,8 @@ class LinearProbingHashST:
         :rtype: int
         """
 
-        return hash(key) % self._m
+        return (hash(key) * self._scale +
+                self._shift) % self._prime % (self._m - 1)
 
     def _resize(self, cap):
         """Resizes the internal storage list
@@ -58,11 +66,13 @@ class LinearProbingHashST:
         :type cap: int
         """
 
-        t = LinearProbingHashST(cap)
-        for i in range(self._m):
+        t = LinearProbingHashST(cap, self._prime)
+        for i in range(self._m - 1):
             if self._keys[i] is not None:
                 t[self._keys[i]] = self._values[i]
         self._m = t._m
+        self._scale = t._scale
+        self._shift = t._shift
         self._keys = t._keys
         self._values = t._values
 
@@ -83,7 +93,7 @@ class LinearProbingHashST:
             if key == self._keys[i]:
                 self._values[i] = value
                 return
-            i = (i + 1) % self._m
+            i = (i + 1) % (self._m - 1)
 
         self._keys[i] = key
         self._values[i] = value
@@ -102,7 +112,7 @@ class LinearProbingHashST:
         while self._keys[i] is not None:
             if key == self._keys[i]:
                 return self._values[i]
-            i = (i + 1) % self._m
+            i = (i + 1) % (self._m - 1)
         raise KeyError("Key `{}` not found.".format(key))
 
     def __delitem__(self, key):
@@ -118,11 +128,11 @@ class LinearProbingHashST:
 
         i = self._hash(key)
         while key != self._keys[i]:
-            i = (i + 1) % self._m
+            i = (i + 1) % (self._m - 1)
         self._keys[i] = None
         self._values[i] = None
 
-        i = (i + 1) % self._m
+        i = (i + 1) % (self._m - 1)
         while self._keys[i] is not None:
             key_to_redo = self._keys[i]
             value_to_redo = self._values[i]
@@ -130,7 +140,7 @@ class LinearProbingHashST:
             self._values[i] = None
             self._n -= 1
             self[key_to_redo] = value_to_redo
-            i = (i + 1) % self._m
+            i = (i + 1) % (self._m - 1)
 
         self._n -= 1
         if self._n > 3 and self._n <= self._m / 8:
@@ -149,14 +159,14 @@ class LinearProbingHashST:
         while self._keys[i] is not None:
             if key == self._keys[i]:
                 return True
-            i = (i + 1) % self._m
+            i = (i + 1) % (self._m - 1)
         return False
 
     def __iter__(self):
         """Iterates over the symbol table, order is not preserved. Generates
         a sequence of keys."""
 
-        for i in range(self._m):
+        for i in range(self._m - 1):
             if self._keys[i] is not None:
                 yield self._keys[i]
 
@@ -169,7 +179,7 @@ class LinearProbingHashST:
         """Iterates over the symbol table, order is not preserved. Generates
         a sequence of values."""
 
-        for i in range(self._m):
+        for i in range(self._m - 1):
             if self._keys[i] is not None:
                 yield self._values[i]
 
@@ -177,7 +187,7 @@ class LinearProbingHashST:
         """Iterates over the symbol table, order is not preserved. Generates
         a sequence of (key, value) pairs."""
 
-        for i in range(self._m):
+        for i in range(self._m - 1):
             if self._keys[i] is not None:
                 yield self._keys[i], self._values[i]
 
