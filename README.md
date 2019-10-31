@@ -26,6 +26,10 @@ A collection of algorithms and data structures in Python 3.
 * Separate Chaining Hash
 * Linear Probing Hash
 
+### Trees
+
+* Binary Search Tree
+
 ## Testing
 
 Example:
