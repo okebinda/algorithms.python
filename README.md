@@ -29,6 +29,7 @@ A collection of algorithms and data structures in Python 3.
 ### Trees
 
 * Binary Search Tree
+* Red-Black Binary Search Tree
 
 ## Testing
 
