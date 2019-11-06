@@ -252,6 +252,7 @@ class RedBlackBST:
             node = self._min(node.right)
             node.right = self._delete_min(t.right)
             node.left = t.left
+
         node.n = 1 + RedBlackBST._len(node.left) + RedBlackBST._len(node.right)
         return node
 
