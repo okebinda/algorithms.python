@@ -35,6 +35,7 @@ A collection of algorithms and data structures in Python 3.
 
 * Graph
 * Depth-First Search Client
+* Breadth-First Search Client
 
 ## Testing
 

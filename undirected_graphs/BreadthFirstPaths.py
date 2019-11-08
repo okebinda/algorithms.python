@@ -1,12 +1,12 @@
-"""Undirected Graph: Depth-First Paths"""
+"""Undirected Graph: Breadth-First Paths"""
 
 
-class DepthFirstPaths:
-    """A Graph client that uses depth-first search to find paths to all
-    vertices connected to an initial vertex."""
+class BreadthFirstPaths:
+    """A Graph client that uses breadth-first search to find paths to all
+        vertices connected to an initial vertex."""
 
     def __init__(self, G, s):
-        """DepthFirstPaths constructor.
+        """BreadthFirstPaths constructor.
 
         :param G: The complete graph to search
         :type G: Graph
@@ -17,11 +17,11 @@ class DepthFirstPaths:
         self._marked = [False] * G.V()
         self._edge_to = [None] * G.V()
         self._s = s
-        self._dfs(G, s)
+        self._bfs(G, s)
 
-    def _dfs(self, G, v):
+    def _bfs(self, G, v):
         """Finds all paths on the graph from the initial vertex using
-        depth-first search.
+        breadth-first search.
 
         :param G: The complete graph to search
         :type G: Graph
@@ -29,11 +29,16 @@ class DepthFirstPaths:
         :type v: int
         """
 
+        stack = []
         self._marked[v] = True
-        for w in G.adj(v):
-            if self._marked[w] is False:
-                self._edge_to[w] = v
-                self._dfs(G, w)
+        stack.append(v)
+        while len(stack) > 0:
+            v = stack.pop()
+            for w in G.adj(v):
+                if self._marked[w] is False:
+                    self._edge_to[w] = v
+                    self._marked[w] = True
+                    stack.append(w)
 
     def has_path_to(self, v):
         """Determines if a path between the given vertex and the initial one
@@ -75,7 +80,7 @@ if __name__ == "__main__":
     from .Graph import Graph
 
 
-    class TestDepthFirstPaths(unittest.TestCase):
+    class TestBreadthFirstPaths(unittest.TestCase):
 
         graph = None
 
@@ -85,25 +90,25 @@ if __name__ == "__main__":
             self.graph = Graph(filename=data_file)
 
         def test_has_path_to(self):
-            dfp0 = DepthFirstPaths(self.graph, 0)
+            bfp0 = BreadthFirstPaths(self.graph, 0)
             for x in [0, 1, 2, 3, 4, 5, 6]:
-                self.assertTrue(dfp0.has_path_to(x))
+                self.assertTrue(bfp0.has_path_to(x))
             for x in [7, 8, 9, 10, 11, 12]:
-                self.assertFalse(dfp0.has_path_to(x))
+                self.assertFalse(bfp0.has_path_to(x))
 
-            dfp7 = DepthFirstPaths(self.graph, 7)
+            bfp7 = BreadthFirstPaths(self.graph, 7)
             for x in [7, 8]:
-                self.assertTrue(dfp7.has_path_to(x))
+                self.assertTrue(bfp7.has_path_to(x))
             for x in [1, 2, 3, 4, 5, 6, 9, 10, 11, 12]:
-                self.assertFalse(dfp7.has_path_to(x))
+                self.assertFalse(bfp7.has_path_to(x))
 
         def test_path_to(self):
-            dfp0 = DepthFirstPaths(self.graph, 0)
-            self.assertEqual((0, 5, 4), dfp0.path_to(4))
-            self.assertIsNone(dfp0.path_to(8))
+            bfp0 = BreadthFirstPaths(self.graph, 0)
+            self.assertEqual((0, 6, 4), bfp0.path_to(4))
+            self.assertIsNone(bfp0.path_to(8))
 
-            dfp12 = DepthFirstPaths(self.graph, 12)
-            self.assertEqual((12, 9, 10), dfp12.path_to(10))
+            bfp12 = BreadthFirstPaths(self.graph, 12)
+            self.assertEqual((12, 9, 10), bfp12.path_to(10))
 
 
     unittest.main()
