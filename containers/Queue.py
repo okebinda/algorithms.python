@@ -106,8 +106,6 @@ if __name__ == "__main__":
 
     class TestQueue(unittest.TestCase):
 
-        queue = None
-
         def setUp(self):
             self.queue = Queue()
             self.queue.enqueue("m")

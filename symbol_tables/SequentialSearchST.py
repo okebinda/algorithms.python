@@ -179,8 +179,6 @@ if __name__ == "__main__":
 
     class TestSequentialSearchST(unittest.TestCase):
 
-        st = None
-
         def setUp(self):
             self.st = SequentialSearchST()
             self.st["m"] = "Letter M"

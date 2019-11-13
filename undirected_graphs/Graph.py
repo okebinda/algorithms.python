@@ -115,9 +115,6 @@ if __name__ == "__main__":
 
     class TestGraph(unittest.TestCase):
 
-        graph1 = None
-        graph2 = None
-
         def setUp(self):
             data_path = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')

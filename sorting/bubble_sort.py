@@ -30,9 +30,6 @@ if __name__ == "__main__":
 
     class TestBubbleSort(unittest.TestCase):
 
-        ordered = None
-        shuffled = None
-
         def setUp(self):
             self.ordered = [x for x in range(20)]
             self.shuffled = [*self.ordered]

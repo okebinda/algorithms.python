@@ -578,8 +578,6 @@ if __name__ == "__main__":
 
     class TestRedBlackBST(unittest.TestCase):
 
-        tree = None
-
         def setUp(self):
             self.tree = RedBlackBST()
             self.tree['m'] = "Letter M"

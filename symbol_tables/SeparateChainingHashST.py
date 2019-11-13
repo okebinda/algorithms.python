@@ -147,8 +147,6 @@ if __name__ == "__main__":
 
     class TestSeparateChainingHashST(unittest.TestCase):
 
-        st = None
-
         def setUp(self):
             self.st = SeparateChainingHashST()
             self.st['m'] = "Letter M"

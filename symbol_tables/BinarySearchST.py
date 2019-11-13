@@ -217,8 +217,6 @@ if __name__ == "__main__":
 
     class TestBinarySearchST(unittest.TestCase):
 
-        st = None
-
         def setUp(self):
             self.st = BinarySearchST()
             self.st["m"] = "Letter M"

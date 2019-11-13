@@ -199,8 +199,6 @@ if __name__ == "__main__":
 
     class TestLinearProbingHashST(unittest.TestCase):
 
-        st = None
-
         def setUp(self):
             self.st = LinearProbingHashST()
             self.st['m'] = "Letter M"

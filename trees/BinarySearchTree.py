@@ -488,8 +488,6 @@ if __name__ == "__main__":
 
     class TestBinarySearchTree(unittest.TestCase):
 
-        tree = None
-
         def setUp(self):
             self.tree = BinarySearchTree()
             self.tree['m'] = "Letter M"

@@ -96,8 +96,6 @@ if __name__ == "__main__":
 
     class TestStack(unittest.TestCase):
 
-        stack = None
-
         def setUp(self):
             self.stack = Stack()
             self.stack.push("m")

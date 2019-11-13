@@ -77,8 +77,6 @@ if __name__ == "__main__":
 
     class TestDepthFirstPaths(unittest.TestCase):
 
-        graph = None
-
         def setUp(self):
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')
