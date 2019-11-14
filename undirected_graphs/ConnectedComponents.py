@@ -46,6 +46,7 @@ class ConnectedComponents:
         :return: True if vertices are connected, False otherwise
         :rtype: bool
         """
+
         return self._id[v] == self._id[w]
 
     def id(self, v):
