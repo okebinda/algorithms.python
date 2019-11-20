@@ -91,6 +91,7 @@ class Graph:
         :return: The adjacency list of vertex v
         :rtype: list
         """
+
         return self._adj[v]
 
     def __str__(self):

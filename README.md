@@ -39,6 +39,12 @@ A collection of algorithms and data structures in Python 3.
 * Breadth-First Search Client
 * Connected Components Client
 
+### Directed Graphs
+
+* Digraph
+* Depth-First Search Client
+* Cycle Detection Client
+
 ## Testing
 
 Example:
