@@ -58,7 +58,7 @@ if __name__ == "__main__":
     import unittest
     from os import path
 
-    from .Digraph import Digraph
+    from .DirectedGraph import DirectedGraph
 
 
     class TestDirectedDepthFirstSearch(unittest.TestCase):
@@ -66,7 +66,7 @@ if __name__ == "__main__":
         def setUp(self):
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyDG.txt')
-            self.graph = Digraph(filename=data_file)
+            self.graph = DirectedGraph(filename=data_file)
 
         def test_marked(self):
             reachable1 = DirectedDepthFirstSearch(self.graph, 1)

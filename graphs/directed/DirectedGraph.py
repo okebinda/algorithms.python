@@ -1,14 +1,16 @@
-"""Directed Graph: Digraph"""
+"""Directed Graph: DirectedGraph"""
 
 from collections import defaultdict
 
+from graphs.Graph import Graph
 
-class Digraph:
+
+class DirectedGraph(Graph):
     """A simple directed graph. Contains zero-indexed vertices and edges as
     adjacency lists for each vertex."""
 
     def __init__(self, *, filename=None, edges=None):
-        """Digraph constructor.
+        """DirectedGraph constructor.
 
         :param filename: File with graph edges to load
         :type filename: str
@@ -129,7 +131,7 @@ class Digraph:
         :rtype: Digraph
         """
 
-        R = Digraph()
+        R = DirectedGraph()
         for v in range(self.order()):
             for w in self.adj(v):
                 R.add_edge(w, v)
@@ -164,30 +166,30 @@ if __name__ == "__main__":
         def setUp(self):
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyDG.txt')
-            self.graph1 = Digraph(filename=data_file)
-            self.graph2 = Digraph(edges=self.edges2)
+            self.graph1 = DirectedGraph(filename=data_file)
+            self.graph2 = DirectedGraph(edges=self.edges2)
 
         def test_size(self):
             self.assertEqual(22, self.graph1.size())
             self.assertEqual(15, self.graph2.size())
-            self.assertEqual(0, Digraph().size())
+            self.assertEqual(0, DirectedGraph().size())
 
         def test_len(self):
             self.assertEqual(22, len(self.graph1))
             self.assertEqual(15, len(self.graph2))
-            self.assertEqual(0, len(Digraph()))
+            self.assertEqual(0, len(DirectedGraph()))
 
         def test_order(self):
             self.assertEqual(13, self.graph1.order())
             self.assertEqual(13, self.graph2.order())
-            self.assertEqual(0, Digraph().order())
+            self.assertEqual(0, DirectedGraph().order())
 
         def test_contains(self):
             self.assertTrue((2, 3) in self.graph1)
             self.assertFalse((9, 4) in self.graph1)
             self.assertTrue((3, 5) in self.graph2)
             self.assertFalse((9, 1) in self.graph2)
-            self.assertFalse((1, 2) in Digraph())
+            self.assertFalse((1, 2) in DirectedGraph())
 
         def test_adj(self):
             self.assertEqual([1, 5], sorted(self.graph1.adj(0)))

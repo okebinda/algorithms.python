@@ -72,7 +72,7 @@ if __name__ == "__main__":
     import unittest
     from os import path
 
-    from .Graph import Graph
+    from .UndirectedGraph import UndirectedGraph
 
 
     class TestDepthFirstPaths(unittest.TestCase):
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         def setUp(self):
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')
-            self.graph = Graph(filename=data_file)
+            self.graph = UndirectedGraph(filename=data_file)
 
         def test_has_path_to(self):
             dfp0 = DepthFirstPaths(self.graph, 0)

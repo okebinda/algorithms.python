@@ -31,17 +31,21 @@ A collection of algorithms and data structures in Python 3.
 * Binary Search Tree
 * Red-Black Binary Search Tree
 
-### Undirected Graphs
+### Graphs
 
-* Graph
+* Graph Abstract Base Class
+
+#### Undirected Graphs
+
+* Undirected Graph
 * Symbol Graph
 * Depth-First Search Client
 * Breadth-First Search Client
 * Connected Components Client
 
-### Directed Graphs
+#### Directed Graphs
 
-* Digraph
+* Directed Graph
 * Depth-First Search Client
 * Cycle Detection Client
 

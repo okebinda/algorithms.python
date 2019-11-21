@@ -3,7 +3,7 @@
 
 class BreadthFirstPaths:
     """A Graph client that uses breadth-first search to find paths to all
-        vertices connected to an initial vertex."""
+    vertices connected to an initial vertex."""
 
     def __init__(self, G, s):
         """BreadthFirstPaths constructor.
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     import unittest
     from os import path
 
-    from .Graph import Graph
+    from .UndirectedGraph import UndirectedGraph
 
 
     class TestBreadthFirstPaths(unittest.TestCase):
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         def setUp(self):
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')
-            self.graph = Graph(filename=data_file)
+            self.graph = UndirectedGraph(filename=data_file)
 
         def test_has_path_to(self):
             bfp0 = BreadthFirstPaths(self.graph, 0)

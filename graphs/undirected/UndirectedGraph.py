@@ -1,14 +1,16 @@
-"""Undirected Graph: Graph"""
+"""Undirected Graph: UndirectedGraph"""
 
 from collections import defaultdict
 
+from graphs.Graph import Graph
 
-class Graph:
+
+class UndirectedGraph(Graph):
     """A simple undirected graph. Contains zero-indexed vertices and edges as
     adjacency lists for each vertex."""
 
     def __init__(self, *, filename=None, edges=None):
-        """Graph constructor.
+        """UndirectedGraph constructor.
 
         :param filename: File with graph edges to load
         :type filename: str
@@ -153,23 +155,23 @@ if __name__ == "__main__":
         def setUp(self):
             data_path = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')
-            self.graph1 = Graph(filename=data_path)
-            self.graph2 = Graph(edges=self.edges2)
+            self.graph1 = UndirectedGraph(filename=data_path)
+            self.graph2 = UndirectedGraph(edges=self.edges2)
 
         def test_size(self):
             self.assertEqual(13, self.graph1.size())
             self.assertEqual(8, self.graph2.size())
-            self.assertEqual(0, Graph().size())
+            self.assertEqual(0, UndirectedGraph().size())
 
         def test_len(self):
             self.assertEqual(13, len(self.graph1))
             self.assertEqual(8, len(self.graph2))
-            self.assertEqual(0, len(Graph()))
+            self.assertEqual(0, len(UndirectedGraph()))
 
         def test_order(self):
             self.assertEqual(13, self.graph1.order())
             self.assertEqual(7, self.graph2.order())
-            self.assertEqual(0, Graph().order())
+            self.assertEqual(0, UndirectedGraph().order())
 
         def test_contains(self):
             self.assertTrue((11, 12) in self.graph1)
@@ -177,7 +179,7 @@ if __name__ == "__main__":
             self.assertFalse((12, 8) in self.graph1)
             self.assertTrue((0, 1) in self.graph2)
             self.assertFalse((6, 5) in self.graph2)
-            self.assertFalse((1, 2) in Graph())
+            self.assertFalse((1, 2) in UndirectedGraph())
 
         def test_add_edge(self):
             self.graph1.add_edge(9, 7)

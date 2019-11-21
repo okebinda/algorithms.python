@@ -1,9 +1,11 @@
 """Undirected Graph: Symbol Graph"""
 
-from .Graph import Graph
+from .UndirectedGraph import UndirectedGraph
+
+from graphs.Graph import Graph
 
 
-class SymbolGraph:
+class SymbolGraph(Graph):
     """An undirected graph with node labels."""
 
     def __init__(self, *, filename=None, sp=None):
@@ -56,7 +58,7 @@ class SymbolGraph:
         :type sp: str
         """
 
-        self._G = Graph()
+        self._G = UndirectedGraph()
         if filename is not None:
             with open(filename, 'rt') as fp:
                 for line in fp:
@@ -316,7 +318,7 @@ if __name__ == "__main__":
             self.assertEqual("\n".join(graph_out), str(self.graph))
 
         def test_G(self):
-            self.assertIsInstance(self.graph.G(), Graph)
+            self.assertIsInstance(self.graph.G(), UndirectedGraph)
 
         def test_client(self):
             self.assertEqual(
