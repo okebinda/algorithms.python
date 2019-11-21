@@ -13,36 +13,37 @@ def heapsort(a):
         :rtype: list
         """
 
-    def heapify(heap, n, i):
-        """Creates a heap-ordered binary tree
-
-        :param heap: A list to heap order
-        :type heap: list
-        :param n: Length of sub list to heapify
-        :type n: int
-        :param i: Index of element to heap order
-        :type i: int
-        """
-
-        max = i
-        l = i*2 + 1
-        r = i*2 + 2
-        if l < n and heap[i] < heap[l]:
-            max = l
-        if r < n and heap[max] < heap[r]:
-            max = r
-        if max != i:
-            heap[i], heap[max] = heap[max], heap[i]
-            heapify(heap, n, max)
-
     b = [*a]
     n = len(b)
     for i in range(n, -1, -1):
-        heapify(b, n, i)
+        _heapify(b, n, i)
     for i in range(n-1, 0, -1):
         b[0], b[i] = b[i], b[0]
-        heapify(b, i, 0)
+        _heapify(b, i, 0)
     return b
+
+
+def _heapify(heap, n, i):
+    """Creates a heap-ordered binary tree
+
+    :param heap: A list to heap order
+    :type heap: list
+    :param n: Length of sub list to heapify
+    :type n: int
+    :param i: Index of element to heap order
+    :type i: int
+    """
+
+    max = i
+    l = i * 2 + 1
+    r = i * 2 + 2
+    if l < n and heap[i] < heap[l]:
+        max = l
+    if r < n and heap[max] < heap[r]:
+        max = r
+    if max != i:
+        heap[i], heap[max] = heap[max], heap[i]
+        _heapify(heap, n, max)
 
 
 if __name__ == "__main__":
