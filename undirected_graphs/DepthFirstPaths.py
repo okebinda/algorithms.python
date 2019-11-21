@@ -14,8 +14,8 @@ class DepthFirstPaths:
         :type s: int
         """
 
-        self._marked = [False] * G.V()
-        self._edge_to = [None] * G.V()
+        self._marked = [False] * G.order()
+        self._edge_to = [None] * G.order()
         self._s = s
         self._dfs(G, s)
 

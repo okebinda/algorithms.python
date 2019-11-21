@@ -12,10 +12,10 @@ class ConnectedComponents:
         :type G: Graph
         """
 
-        self._marked = [False] * G.V()
-        self._id = [None] * G.V()
+        self._marked = [False] * G.order()
+        self._id = [None] * G.order()
         self._count = 0
-        for s in range(G.V()):
+        for s in range(G.order()):
             if self._marked[s] is False:
                 self._dfs(G, s)
                 self._count += 1
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         def test_client(self):
             cc = ConnectedComponents(self.graph)
             components = [[] for _ in range(cc.count())]
-            for v in range(self.graph.V()):
+            for v in range(self.graph.order()):
                 components[cc.id(v)].append(v)
             self.assertEqual([
                 [0, 1, 2, 3, 4, 5, 6],

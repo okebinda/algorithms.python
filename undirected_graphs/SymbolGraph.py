@@ -56,7 +56,7 @@ class SymbolGraph:
         :type sp: str
         """
 
-        self._G = Graph(size=len(self._st))
+        self._G = Graph()
         if filename is not None:
             with open(filename, 'rt') as fp:
                 for line in fp:
@@ -67,7 +67,7 @@ class SymbolGraph:
                         self._G.add_edge(v, self._st[a[i]])
                         i += 1
 
-    def contains(self, s):
+    def exists(self, s):
         """Determines if a node label is in the graph.
 
         :param s: A node label
@@ -101,6 +101,102 @@ class SymbolGraph:
 
         return self._keys[v]
 
+    def size(self):
+        """Reports the number of edges in the graph.
+
+        :return: Number of edges in the graph
+        :rtype: int
+        """
+
+        return self._G.size()
+
+    def __len__(self):
+        """Reports the number of edges in the graph. Alias for self.size().
+
+        :return: Number of edges in the graph
+        :rtype: int
+        """
+
+        return self.size()
+
+    def order(self):
+        """Reports the number of vertices in the graph.
+
+        :return: Number of vertices in the graph
+        :rtype: int
+        """
+
+        return self._G.order()
+
+    def __contains__(self, edge):
+        """Determines if an edge exists in the graph.
+
+        :param edge: An edge represented as a tuple (v, w) to test for
+        :type edge: tuple
+        :return: True if edges exists, other wise False
+        :rtype: bool
+        """
+
+        v, w = edge
+        return (self.index_of(v), self.index_of(w)) in self._G
+
+    def add_edge(self, v, w):
+        """Creates an edge between two vertices.
+
+        :param v: Vertex 1 label
+        :type v: str
+        :param w: Vertex 2 label
+        :type w: str
+        """
+
+        if v not in self._st:
+            self._st[v] = len(self._keys)
+            self._keys.append(v)
+
+        if w not in self._st:
+            self._st[w] = len(self._keys)
+            self._keys.append(w)
+
+        self._G.add_edge(self.index_of(v), self.index_of(w))
+
+    def adj(self, v):
+        """Retrieves the adjacency list for a vertex.
+
+        :param v: Vertex label
+        :type v: str
+        :return: The adjacency list of vertex v
+        :rtype: list
+        """
+
+        return list(map(lambda x: self.name_of(x),
+                        self._G.adj(self.index_of(v))))
+
+    def __iter__(self):
+        """Generates a sequence of graph edges in no particular order.
+
+        :return: A sequence of graph edges
+        :rtype: generator
+        """
+
+        completed = set()
+        for v in self._keys:
+            for w in self.adj(v):
+                if (w, v) not in completed:
+                    yield v, w
+                    completed.add((v, w))
+
+    def __str__(self):
+        """Generates a human readable representation of the graph.
+
+        :return: Vertex and edge count and adjacency list per vertex
+        :rtype: str
+        """
+
+        out = []
+        for v in sorted(self._keys):
+            out.append("{}: {}".format(v, ", ".join(sorted(self.adj(v)))))
+        return "\n".join(out)
+
     def G(self):
         """Gets the internal graph data structure.
 
@@ -126,12 +222,12 @@ if __name__ == "__main__":
                                   'data/routes.txt')
             self.graph = SymbolGraph(filename=data_file)
 
-        def test_contains(self):
-            self.assertTrue(self.graph.contains('JFK'))
-            self.assertTrue(self.graph.contains('ORD'))
-            self.assertTrue(self.graph.contains('ATL'))
-            self.assertFalse(self.graph.contains('ABC'))
-            self.assertFalse(self.graph.contains('XYZ'))
+        def test_exists(self):
+            self.assertTrue(self.graph.exists('JFK'))
+            self.assertTrue(self.graph.exists('ORD'))
+            self.assertTrue(self.graph.exists('ATL'))
+            self.assertFalse(self.graph.exists('ABC'))
+            self.assertFalse(self.graph.exists('XYZ'))
 
         def test_index_of(self):
             self.assertEqual(0, self.graph.index_of('JFK'))
@@ -144,6 +240,80 @@ if __name__ == "__main__":
             self.assertEqual("MCO", self.graph.name_of(1))
             self.assertEqual("ORD", self.graph.name_of(2))
             self.assertEqual("DEN", self.graph.name_of(3))
+
+        def test_size(self):
+            self.assertEqual(18, self.graph.size())
+
+        def test_len(self):
+            self.assertEqual(18, len(self.graph))
+
+        def test_order(self):
+            self.assertEqual(10, self.graph.order())
+
+        def test_contains(self):
+            self.assertTrue(('JFK', 'ATL') in self.graph)
+            self.assertTrue(('ATL', 'JFK') in self.graph)
+            self.assertFalse(('ORD', 'LAX') in self.graph)
+
+        def test_add_edge(self):
+
+            # add edge with existing nodes
+            self.graph.add_edge('ORD', 'LAX')
+            self.assertEqual(19, self.graph.size())
+            self.assertEqual(10, self.graph.order())
+            self.assertTrue(('ORD', 'LAX') in self.graph)
+
+            # an edge that already exists shouldn't change anything
+            self.graph.add_edge('JFK', 'ATL')
+            self.assertEqual(19, self.graph.size())
+            self.assertEqual(10, self.graph.order())
+
+            # add edge with one new node
+            self.graph.add_edge('LAX', 'SAN')
+            self.assertEqual(20, self.graph.size())
+            self.assertEqual(11, self.graph.order())
+            self.assertTrue(('LAX', 'SAN') in self.graph)
+            self.assertEqual(10, self.graph.index_of('SAN'))
+
+            # add edge with two new nodes
+            self.graph.add_edge('CLT', 'IAH')
+            self.assertEqual(21, self.graph.size())
+            self.assertEqual(13, self.graph.order())
+            self.assertTrue(('CLT', 'IAH') in self.graph)
+            self.assertEqual(11, self.graph.index_of('CLT'))
+            self.assertEqual(12, self.graph.index_of('IAH'))
+
+        def test_adj(self):
+            self.assertEqual(['ATL', 'MCO', 'ORD'],
+                             sorted(self.graph.adj('JFK')))
+            self.assertEqual(['ATL', 'DEN', 'DFW', 'HOU', 'JFK', 'PHX'],
+                             sorted(self.graph.adj('ORD')))
+
+        def test_iter(self):
+            edges = (('JFK', 'MCO'), ('ORD', 'DEN'), ('ORD', 'HOU'),
+                     ('DFW', 'PHX'), ('JFK', 'ATL'), ('ORD', 'DFW'),
+                     ('ORD', 'PHX'), ('ATL', 'HOU'), ('DEN', 'PHX'),
+                     ('PHX', 'LAX'), ('JFK', 'ORD'), ('DEN', 'LAS'),
+                     ('DFW', 'HOU'), ('ORD', 'ATL'), ('LAS', 'LAX'),
+                     ('ATL', 'MCO'), ('HOU', 'MCO'), ('LAS', 'PHX'))
+            for edge in self.graph:
+                v, w = edge
+                self.assertTrue((v, w) in edges or (w, v) in edges)
+
+        def test_str(self):
+            graph_out = [
+                "ATL: HOU, JFK, MCO, ORD",
+                "DEN: LAS, ORD, PHX",
+                "DFW: HOU, ORD, PHX",
+                "HOU: ATL, DFW, MCO, ORD",
+                "JFK: ATL, MCO, ORD",
+                "LAS: DEN, LAX, PHX",
+                "LAX: LAS, PHX",
+                "MCO: ATL, HOU, JFK",
+                "ORD: ATL, DEN, DFW, HOU, JFK, PHX",
+                "PHX: DEN, DFW, LAS, LAX, ORD"
+            ]
+            self.assertEqual("\n".join(graph_out), self.graph.__str__())
 
         def test_G(self):
             self.assertIsInstance(self.graph.G(), Graph)

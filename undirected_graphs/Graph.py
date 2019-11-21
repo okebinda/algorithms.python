@@ -1,36 +1,26 @@
 """Undirected Graph: Graph"""
 
+from collections import defaultdict
+
 
 class Graph:
     """A simple undirected graph. Contains zero-indexed vertices and edges as
     adjacency lists for each vertex."""
 
-    def __init__(self, *, filename=None, size=None):
+    def __init__(self, *, filename=None, edges=None):
         """Graph constructor.
 
         :param filename: File with graph edges to load
         :type filename: str
-        :param size: Number of graph vertices to initialize
-        :type size: int
+        :param edges: A sequence of edges (as tuples) to initialize
+        :type edges: iterable
         """
 
-        self._V = 0
-        self._E = 0
-        self._adj = []
-
-        self._set_size(size)
+        self._size = 0
+        self._vertices = set()
+        self._adj = defaultdict(list)
         self._read_file(filename)
-
-    def _set_size(self, size):
-        """Initializes vertex count for graph, including empty adjacency lists.
-
-        :param size: Number of graph vertices to initialize
-        :type size: int
-        """
-
-        if size is not None:
-            self._V = size
-            self._adj = [[] for x in range(size)]
+        self._load_edges(edges)
 
     def _read_file(self, filename):
         """Initializes edges of a graph based on an input file.
@@ -41,34 +31,59 @@ class Graph:
 
         if filename is not None:
             with open(filename, 'rt') as fp:
-                for i, line in enumerate(fp):
-                    if i == 0:
-                        self._set_size(int(line))
-                    elif i == 1:
-                        # self._E = int(line)
-                        pass
-                    else:
-                        edge = tuple(map(lambda x: int(x),
-                                         line.rstrip().split(' ')))
-                        self.add_edge(edge[0], edge[1])
+                for line in fp:
+                    self.add_edge(*tuple(map(lambda x: int(x),
+                                             line.rstrip().split(' '))))
 
-    def V(self):
-        """Reports the number of vertices in the graph.
+    def _load_edges(self, edges):
+        """Initializes edges of a graph based on a sequence of edge tuples.
 
-        :return: Number of vertices in the graph
-        :rtype: int
+        :param edges: Sequence of edge tuples to load
+        :type edges: iterable
         """
 
-        return self._V
+        if edges is not None:
+            for edge in edges:
+                self.add_edge(*edge)
 
-    def E(self):
+    def size(self):
         """Reports the number of edges in the graph.
 
         :return: Number of edges in the graph
         :rtype: int
         """
 
-        return self._E
+        return self._size
+
+    def __len__(self):
+        """Reports the number of edges in the graph. Alias for self.size().
+
+        :return: Number of edges in the graph
+        :rtype: int
+        """
+
+        return self.size()
+
+    def order(self):
+        """Reports the number of vertices in the graph.
+
+        :return: Number of vertices in the graph
+        :rtype: int
+        """
+
+        return len(self._vertices)
+
+    def __contains__(self, edge):
+        """Determines if an edge exists in the graph.
+
+        :param edge: An edge represented as a tuple (v, w) to test for
+        :type edge: tuple
+        :return: True if edges exists, other wise False
+        :rtype: bool
+        """
+
+        v, w = edge
+        return self._adj[v] and w in self._adj[v]
 
     def add_edge(self, v, w):
         """Creates an edge between two vertices.
@@ -79,9 +94,11 @@ class Graph:
         :type w: int 
         """
 
-        self._adj[v].append(w)
-        self._adj[w].append(v)
-        self._E += 1
+        if not (v, w) in self:
+            self._vertices |= {v, w}
+            self._adj[v].append(w)
+            self._adj[w].append(v)
+            self._size += 1
 
     def adj(self, v):
         """Retrieves the adjacency list for a vertex.
@@ -94,6 +111,20 @@ class Graph:
 
         return self._adj[v]
 
+    def __iter__(self):
+        """Generates a sequence of graph edges in no particular order.
+
+        :return: A sequence of graph edges
+        :rtype: generator
+        """
+
+        completed = set()
+        for v in self._vertices:
+            for w in self._adj[v]:
+                if (w, v) not in completed:
+                    yield v, w
+                    completed.add((v, w))
+
     def __str__(self):
         """Generates a human readable representation of the graph.
 
@@ -101,10 +132,10 @@ class Graph:
         :rtype: str
         """
 
-        out = ["Vertices: {}".format(self._V), "Edges: {}".format(self._E)]
-        for v, adj in enumerate(self._adj):
-            out.append("{}: {}".format(v, ' '.join(list(map(lambda x: str(x),
-                                                            adj)))))
+        out = []
+        for v in sorted(self._vertices):
+            out.append("{}: {}".format(v, ', '.join(list(map(lambda x: str(x),
+                                                            self._adj[v])))))
         return "\n".join(out)
 
 
@@ -116,34 +147,56 @@ if __name__ == "__main__":
 
     class TestGraph(unittest.TestCase):
 
+        edges2 = ((0, 5), (4, 3), (0, 1), (6, 4), (5, 4), (0, 2), (0, 6),
+                  (5, 3))
+
         def setUp(self):
             data_path = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')
             self.graph1 = Graph(filename=data_path)
-            self.graph2 = Graph(size=5)
+            self.graph2 = Graph(edges=self.edges2)
 
-        def test_V(self):
-            self.assertEqual(13, self.graph1.V())
-            self.assertEqual(5, self.graph2.V())
-            self.assertEqual(0, Graph().V())
+        def test_size(self):
+            self.assertEqual(13, self.graph1.size())
+            self.assertEqual(8, self.graph2.size())
+            self.assertEqual(0, Graph().size())
 
-        def test_E(self):
-            self.assertEqual(13, self.graph1.E())
-            self.assertEqual(0, self.graph2.E())
-            self.assertEqual(0, Graph().E())
+        def test_len(self):
+            self.assertEqual(13, len(self.graph1))
+            self.assertEqual(8, len(self.graph2))
+            self.assertEqual(0, len(Graph()))
+
+        def test_order(self):
+            self.assertEqual(13, self.graph1.order())
+            self.assertEqual(7, self.graph2.order())
+            self.assertEqual(0, Graph().order())
+
+        def test_contains(self):
+            self.assertTrue((11, 12) in self.graph1)
+            self.assertTrue((12, 11) in self.graph1)
+            self.assertFalse((12, 8) in self.graph1)
+            self.assertTrue((0, 1) in self.graph2)
+            self.assertFalse((6, 5) in self.graph2)
+            self.assertFalse((1, 2) in Graph())
 
         def test_add_edge(self):
             self.graph1.add_edge(9, 7)
-            self.assertEqual(14, self.graph1.E())
+            self.assertEqual(14, self.graph1.size())
             self.assertEqual([7, 10, 11, 12], sorted(self.graph1.adj(9)))
             self.assertEqual([8, 9], sorted(self.graph1.adj(7)))
 
             self.graph2.add_edge(2, 3)
             self.graph2.add_edge(2, 4)
-            self.assertEqual(2, self.graph2.E())
-            self.assertEqual([3, 4], sorted(self.graph2.adj(2)))
-            self.assertEqual([2], sorted(self.graph2.adj(3)))
-            self.assertEqual([2], sorted(self.graph2.adj(4)))
+            self.assertEqual(10, self.graph2.size())
+            self.assertEqual([0, 3, 4], sorted(self.graph2.adj(2)))
+            self.assertEqual([2, 4, 5], sorted(self.graph2.adj(3)))
+            self.assertEqual([2, 3, 5, 6], sorted(self.graph2.adj(4)))
+
+            # an edge that already exists shouldn't change anything
+            self.graph2.add_edge(4, 3)
+            self.assertEqual(10, self.graph2.size())
+            self.assertEqual([2, 4, 5], sorted(self.graph2.adj(3)))
+            self.assertEqual([2, 3, 5, 6], sorted(self.graph2.adj(4)))
 
         def test_adj(self):
             self.assertEqual([5, 1, 2, 6], self.graph1.adj(0))
@@ -160,23 +213,26 @@ if __name__ == "__main__":
             self.assertEqual([12, 9], self.graph1.adj(11))
             self.assertEqual([9, 11], self.graph1.adj(12))
 
+        def test_iter(self):
+            for edge in self.graph2:
+                v, w = edge
+                self.assertTrue((v, w) in self.edges2 or (w, v) in self.edges2)
+
         def test_str(self):
             graph1_out = [
-                "Vertices: 13",
-                "Edges: 13",
-                "0: 5 1 2 6",
+                "0: 5, 1, 2, 6",
                 "1: 0",
                 "2: 0",
-                "3: 4 5",
-                "4: 3 6 5",
-                "5: 0 4 3",
-                "6: 4 0",
+                "3: 4, 5",
+                "4: 3, 6, 5",
+                "5: 0, 4, 3",
+                "6: 4, 0",
                 "7: 8",
                 "8: 7",
-                "9: 12 10 11",
+                "9: 12, 10, 11",
                 "10: 9",
-                "11: 12 9",
-                "12: 9 11"
+                "11: 12, 9",
+                "12: 9, 11"
             ]
             self.assertEqual("\n".join(graph1_out), self.graph1.__str__())
 
