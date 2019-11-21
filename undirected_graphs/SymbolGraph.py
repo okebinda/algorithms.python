@@ -313,7 +313,7 @@ if __name__ == "__main__":
                 "ORD: ATL, DEN, DFW, HOU, JFK, PHX",
                 "PHX: DEN, DFW, LAS, LAX, ORD"
             ]
-            self.assertEqual("\n".join(graph_out), self.graph.__str__())
+            self.assertEqual("\n".join(graph_out), str(self.graph))
 
         def test_G(self):
             self.assertIsInstance(self.graph.G(), Graph)

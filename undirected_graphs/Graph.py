@@ -234,7 +234,7 @@ if __name__ == "__main__":
                 "11: 12, 9",
                 "12: 9, 11"
             ]
-            self.assertEqual("\n".join(graph1_out), self.graph1.__str__())
+            self.assertEqual("\n".join(graph1_out), str(self.graph1))
 
 
     unittest.main()
