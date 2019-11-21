@@ -1,7 +1,9 @@
 """Container: Queue"""
 
+from collections.abc import Iterable, Sized
 
-class Queue:
+
+class Queue(Iterable, Sized):
     """A FIFO (First In First Out) data structure implemented as a singly
         linked list"""
 

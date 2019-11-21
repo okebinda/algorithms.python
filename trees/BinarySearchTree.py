@@ -1,7 +1,9 @@
 """Tree: Binary Search Tree"""
 
+from collections.abc import MutableMapping
 
-class BinarySearchTree:
+
+class BinarySearchTree(MutableMapping):
     """A symbol table with key:value pairs implemented as a binary tree."""
 
     class _Node:

@@ -1,7 +1,9 @@
 """Symbol Table: Binary Search"""
 
+from collections.abc import MutableMapping
 
-class BinarySearchST:
+
+class BinarySearchST(MutableMapping):
     """A symbol table with key:value pairs implemented in parallel lists.
     Performs key lookup using binary search."""
 

@@ -1,7 +1,9 @@
 """Symbol Table: Sequential Search"""
 
+from collections.abc import MutableMapping
 
-class SequentialSearchST:
+
+class SequentialSearchST(MutableMapping):
     """A symbol table with key:value pairs implemented as a singly linked
     list. Performs key lookup sequentially starting with most recently added
     element."""

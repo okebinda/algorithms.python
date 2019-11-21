@@ -1,9 +1,11 @@
 """Symbol Table: Separate Chaining Hash"""
 
+from collections.abc import MutableMapping
+
 from .SequentialSearchST import SequentialSearchST
 
 
-class SeparateChainingHashST:
+class SeparateChainingHashST(MutableMapping):
     """A symbol table with key:value pairs implemented using a hash function on
     the keys to store items, maintaining fast lookup times. A regular list is
     used to maintain key -> hash (int) mappings, with each list item being a

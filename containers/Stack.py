@@ -1,7 +1,9 @@
 """Container: Stack"""
 
+from collections.abc import Iterable, Sized
 
-class Stack:
+
+class Stack(Iterable, Sized):
     """A LIFO (Last In First Out) data structure implemented as a singly
     linked list"""
 

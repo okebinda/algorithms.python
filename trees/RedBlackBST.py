@@ -1,7 +1,9 @@
 """Tree: Red-Black Binary Search Tree"""
 
+from collections.abc import MutableMapping
 
-class RedBlackBST:
+
+class RedBlackBST(MutableMapping):
     """A symbol table with key:value pairs implemented as a red-black binary
     tree. It maintains an extra bit per node to stay balanced in order to
     guarantee optimal search/insert performance."""

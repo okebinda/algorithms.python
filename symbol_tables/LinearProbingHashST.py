@@ -1,9 +1,10 @@
 """Symbol Table: Linear Probing Hash"""
 
+from collections.abc import MutableMapping
 from random import randrange
 
 
-class LinearProbingHashST:
+class LinearProbingHashST(MutableMapping):
     """A symbol table with key:value pairs implemented using a hash function on
     the keys to store items, maintaining fast lookup times. Two regular lists
     are used internally for storage - one for keys and one for values - with
