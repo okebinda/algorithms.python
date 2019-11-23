@@ -2,14 +2,14 @@
 
 
 class DirectedCycle:
-    """A Digraph client that uses depth-first search to detect a cycle in the
-    graph."""
+    """A DirectedGraph client that uses depth-first search to detect a cycle in
+    the graph."""
 
     def __init__(self, G):
         """DirectedCycle constructor.
 
         :param G: The complete graph to search
-        :type G: Digraph
+        :type G: DirectedGraph
         """
 
         self._marked = [False] * G.order()
@@ -25,7 +25,7 @@ class DirectedCycle:
         """Finds the first cycle (if any) on a graph using depth-first search.
 
         :param G: The complete graph to search
-        :type G: Graph
+        :type G: DirectedGraph
         :param v: The vertex to start searching from
         :type v: int
         """

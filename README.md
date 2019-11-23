@@ -34,11 +34,11 @@ A collection of algorithms and data structures in Python 3.
 ### Graphs
 
 * Graph Abstract Base Class
+* Symbol Graph
 
 #### Undirected Graphs
 
 * Undirected Graph
-* Symbol Graph
 * Depth-First Search Client
 * Breadth-First Search Client
 * Connected Components Client
@@ -48,6 +48,8 @@ A collection of algorithms and data structures in Python 3.
 * Directed Graph
 * Depth-First Search Client
 * Cycle Detection Client
+* Depth-First Order Client
+* Topological Sort Client
 
 ## Testing
 

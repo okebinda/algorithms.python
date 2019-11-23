@@ -116,7 +116,7 @@ class DirectedGraph(Graph):
         """Generates a sequence of graph edges in no particular order.
 
         :return: A sequence of graph edges
-        :rtype: generator
+        :rtype: Iterable
         """
 
         for v in self._vertices:

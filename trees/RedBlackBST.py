@@ -49,6 +49,7 @@ class RedBlackBST(MutableMapping):
         :return: The "color" bit of the node
         :rtype: bool
         """
+
         return False if node is None else node.color == RedBlackBST.BLACK
 
     @staticmethod

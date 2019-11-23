@@ -2,14 +2,14 @@
 
 
 class DirectedDepthFirstSearch:
-    """A Digraph client that uses depth-first search to find paths to all
+    """A DirectedGraph client that uses depth-first search to find paths to all
     vertices connected to an initial vertex."""
 
     def __init__(self, G, s):
         """DirectedDepthFirstSearch constructor.
 
         :param G: The complete graph to search
-        :type G: Digraph
+        :type G: DirectedGraph
         :param s: The starting vertex or vertices for all path searches
         :type s: int | iterable
         """
@@ -31,7 +31,7 @@ class DirectedDepthFirstSearch:
         depth-first search.
 
         :param G: The complete graph to search
-        :type G: Graph
+        :type G: DirectedGraph
         :param v: The vertex to start searching from
         :type v: int
         """
