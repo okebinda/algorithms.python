@@ -51,6 +51,7 @@ A collection of algorithms and data structures in Python 3.
 * Depth-First Order Client
 * Topological Sort Client
 * Strongly Connected Components Client
+* Transitive Closure Client
 
 ## Testing
 
