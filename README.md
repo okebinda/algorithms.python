@@ -50,6 +50,7 @@ A collection of algorithms and data structures in Python 3.
 * Cycle Detection Client
 * Depth-First Order Client
 * Topological Sort Client
+* Strongly Connected Components Client
 
 ## Testing
 

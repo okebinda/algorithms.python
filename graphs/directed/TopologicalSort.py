@@ -68,6 +68,10 @@ if __name__ == "__main__":
                              list(self.ts.order()))
 
         def test_order_symbol_graph(self):
+
+            # format of file is:
+            #   0/1/2/3...
+            # where 0 is a prerequisite for (directed to) 1, 2, 3...
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/jobs.txt')
             graph = SymbolGraph(DirectedGraph, filename=data_file, sp='/')

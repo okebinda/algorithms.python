@@ -1,0 +1,12 @@
+egret->snake
+snake->egret->frog
+fish->egret->snake->salamander
+shrew->snake
+frog->fox->snake->egret->fish->shrew->salamander
+salamander->frog->snake->egret->fish->shrew
+algae->salamander
+ant->frog->salamander
+mosquito->fox->frog->salamander->ant
+worm->salamander->frog->shrew
+slug->frog->salamander->shrew
+grass->mosquito->slug->worm
