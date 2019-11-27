@@ -246,6 +246,20 @@ class SymbolGraph(Graph):
             out.append("{}: {}".format(v, ", ".join(sorted(self.adj(v)))))
         return "\n".join(out)
 
+    def __repr__(self):
+        """Generates an official string representation of the graph with enough
+        information to recreate it.
+
+        :return: A string representation of the graph that can be eval'd
+        :rtype: str
+        """
+
+        return '{}({}, vertices={}, edges={})'.format(
+            type(self).__name__,
+            type(self._G).__name__,
+            set(self._keys),
+            set(self))
+
     def G(self):
         """Gets the internal graph data structure.
 
@@ -329,7 +343,7 @@ if __name__ == "__main__":
 
         def test_order(self):
             self.assertEqual(10, self.graph1.order())
-            # self.assertEqual(10, self.graph2.order())
+            self.assertEqual(10, self.graph2.order())
 
         def test_contains(self):
             self.assertTrue(('JFK', 'ATL') in self.graph1)
@@ -425,6 +439,11 @@ if __name__ == "__main__":
                 "PHX: LAX"
             ]
             self.assertEqual("\n".join(graph2_out), str(self.graph2))
+
+        def test_repr(self):
+            graph = eval(repr(self.graph1))
+            self.assertEqual(18, graph.size())
+            self.assertEqual(10, graph.order())
 
         def test_G(self):
             self.assertIsInstance(self.graph1.G(), UndirectedGraph)
