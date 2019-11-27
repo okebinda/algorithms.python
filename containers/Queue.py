@@ -5,7 +5,7 @@ from collections.abc import Iterable, Sized
 
 class Queue(Iterable, Sized):
     """A FIFO (First In First Out) data structure implemented as a singly
-        linked list"""
+    linked list"""
 
     class _Node:
         """A data node in the queue"""
@@ -79,6 +79,18 @@ class Queue(Iterable, Sized):
             self._tail = None
         return prev_head.value
 
+    def peek(self):
+        """Reports the value of the first element in the queue without removing
+        it.
+
+        :return: Value of element at the front of the queue
+        :raises: Exception
+        """
+
+        if not bool(self):
+            raise Exception("Queue is empty.")
+        return self._head.value
+
     def __iter__(self):
         """Iterates over the queue, front-to-back
 
@@ -150,6 +162,10 @@ if __name__ == "__main__":
 
             self.assertRaises(Exception, self.queue.dequeue)
             self.assertRaises(Exception, Queue().dequeue)
+
+        def test_peek(self):
+            self.assertEqual('m', self.queue.peek())
+            self.assertRaises(Exception, Queue().peek)
 
         def test_iter(self):
             letters = ['m', 'c', 's', 't', 'b', 'y']

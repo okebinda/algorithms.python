@@ -72,6 +72,18 @@ class Stack(Iterable, Sized):
         self._n -= 1
         return prev_head.value
 
+    def peek(self):
+        """Reports the value of the top element on the stack without removing
+        it.
+
+        :return: Value of element on top of the stack
+        :raises: Exception
+        """
+
+        if not bool(self):
+            raise Exception("Stack is empty.")
+        return self._head.value
+
     def __iter__(self):
         """Iterates over the stack, top-to-bottom"""
 
@@ -140,6 +152,10 @@ if __name__ == "__main__":
 
             self.assertRaises(Exception, self.stack.pop)
             self.assertRaises(Exception, Stack().pop)
+
+        def test_peek(self):
+            self.assertEqual('y', self.stack.peek())
+            self.assertRaises(Exception, Stack().peek)
 
         def test_iter(self):
             letters = ['y', 'b', 't', 's', 'c', 'm']
