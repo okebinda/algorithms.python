@@ -1,3 +1,4 @@
+Calculus/Linear Algebra/Introduction to CS/Advanced Programming/Algorithms/Scientific Computing/Databases/Theoretical CS/Artificial Intelligence/Machine Learning/Robotics/Neural Networks/Computational Biology
 Algorithms/Theoretical CS/Databases/Scientific Computing
 Introduction to CS/Advanced Programming/Algorithms
 Advanced Programming/Scientific Computing

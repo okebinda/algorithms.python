@@ -26,6 +26,15 @@ class Graph(ABC, Collection):
         pass
 
     @abstractmethod
+    def add_vertex(self, v):
+        """Adds a vertex to the graph.
+
+        :param v: Vertex to add
+        :type v: int
+        """
+        pass
+
+    @abstractmethod
     def add_edge(self, v, w):
         """Creates an edge between two vertices.
 

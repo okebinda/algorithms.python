@@ -1,3 +1,4 @@
+grass->mosquito->slug->worm->frog->salamander->shrew->ant->fox->algae->egret->snake->fish
 egret->snake
 snake->egret->frog
 fish->egret->snake->salamander

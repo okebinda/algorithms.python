@@ -52,12 +52,13 @@ if __name__ == "__main__":
 
     class TestTopologicalSort(unittest.TestCase):
 
+        vertices = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
         edges = ((0, 5), (0, 1), (0, 6), (2, 0), (2, 3), (3, 5), (5, 4),
                  (6, 4), (6, 9), (7, 6), (8, 7), (9, 11), (9, 12), (9, 10),
                  (11, 12))
 
         def setUp(self):
-            graph = DirectedGraph(edges=self.edges)
+            graph = DirectedGraph(vertices=self.vertices, edges=self.edges)
             self.ts = TopologicalSort(graph)
 
         def test_has_order(self):
@@ -69,7 +70,7 @@ if __name__ == "__main__":
 
         def test_order_symbol_graph(self):
 
-            # format of file is:
+            # format of file after first line (all nodes) is:
             #   0/1/2/3...
             # where 0 is a prerequisite for (directed to) 1, 2, 3...
             data_file = path.join(path.abspath(path.dirname(__file__)),
@@ -77,13 +78,13 @@ if __name__ == "__main__":
             graph = SymbolGraph(DirectedGraph, filename=data_file, sp='/')
             ts = TopologicalSort(graph.G())
             ordered = [
+                'Introduction to CS',
+                'Algorithms',
+                'Databases',
+                'Advanced Programming',
+                'Scientific Computing',
                 'Calculus',
                 'Linear Algebra',
-                'Introduction to CS',
-                'Advanced Programming',
-                'Algorithms',
-                'Scientific Computing',
-                'Databases',
                 'Theoretical CS',
                 'Artificial Intelligence',
                 'Machine Learning',

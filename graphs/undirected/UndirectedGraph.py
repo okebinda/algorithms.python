@@ -1,4 +1,21 @@
-"""Undirected Graph: UndirectedGraph"""
+"""Undirected Graph: UndirectedGraph
+
+An undirected graph is a graph (G) that contains a set of vertices (V) and a
+set of edges (E), with a bidirectional connection between both vertices in an
+edge tuple.
+
+For example, given the following graph:
+
+    0 - 1
+    | /
+    2 - 3
+
+We can describe the graph as follows:
+
+    G = (V, E)
+    V = {0, 1, 2, 3}
+    E = {(0, 1), (0, 2), (1, 2), (2, 3)}
+"""
 
 from collections import defaultdict
 
@@ -9,11 +26,13 @@ class UndirectedGraph(Graph):
     """A simple undirected graph. Contains zero-indexed vertices and edges as
     adjacency lists for each vertex."""
 
-    def __init__(self, *, filename=None, edges=None):
+    def __init__(self, *, filename=None, vertices=None, edges=None):
         """UndirectedGraph constructor.
 
         :param filename: File with graph edges to load
         :type filename: str
+        :param vertices: A sequence of vertices to initialize
+        :type vertices: iterable
         :param edges: A sequence of edges (as tuples) to initialize
         :type edges: iterable
         """
@@ -22,6 +41,7 @@ class UndirectedGraph(Graph):
         self._vertices = set()
         self._adj = defaultdict(list)
         self._read_file(filename)
+        self._load_vertices(vertices)
         self._load_edges(edges)
 
     def _read_file(self, filename):
@@ -33,9 +53,24 @@ class UndirectedGraph(Graph):
 
         if filename is not None:
             with open(filename, 'rt') as fp:
-                for line in fp:
-                    self.add_edge(*tuple(map(lambda x: int(x),
-                                             line.rstrip().split(' '))))
+                for i, line in enumerate(fp):
+                    if i == 0:
+                        self._vertices = set(map(lambda x: int(x),
+                                                 line.rstrip().split(' ')))
+                    else:
+                        self.add_edge(*tuple(map(lambda x: int(x),
+                                                 line.rstrip().split(' '))))
+
+    def _load_vertices(self, vertices):
+        """Initializes vertices of a graph based on a sequence of integers.
+
+        :param vertices: Sequence of vertex integers to load
+        :type vertices: iterable
+        """
+        
+        if vertices is not None:
+            for v in vertices:
+                self.add_vertex(v)
 
     def _load_edges(self, edges):
         """Initializes edges of a graph based on a sequence of edge tuples.
@@ -87,6 +122,15 @@ class UndirectedGraph(Graph):
         v, w = edge
         return self._adj[v] and w in self._adj[v]
 
+    def add_vertex(self, v):
+        """Adds a vertex to the graph.
+
+        :param v: Vertex to add
+        :type v: int
+        """
+
+        self._vertices.add(v)
+
     def add_edge(self, v, w):
         """Creates an edge between two vertices.
 
@@ -96,8 +140,11 @@ class UndirectedGraph(Graph):
         :type w: int 
         """
 
+        if not {v, w}.issubset(self._vertices):
+            raise ValueError(''.join(["One or more vertices in {} are not ",
+                                      "present in the graph."]).format((v, w)))
+
         if not (v, w) in self:
-            self._vertices |= {v, w}
             self._adj[v].append(w)
             self._adj[w].append(v)
             self._size += 1
@@ -140,6 +187,19 @@ class UndirectedGraph(Graph):
                                                             self._adj[v])))))
         return "\n".join(out)
 
+    def __repr__(self):
+        """Generates an official string representation of the graph with enough
+        information to recreate it.
+        
+        :return: A string representation of the graph that can be eval'd
+        :rtype: str
+        """
+
+        return '{}(vertices={}, edges={})'.format(
+            type(self).__name__,
+            self._vertices,
+            set(self))
+
 
 if __name__ == "__main__":
 
@@ -149,14 +209,16 @@ if __name__ == "__main__":
 
     class TestGraph(unittest.TestCase):
 
-        edges2 = ((0, 5), (4, 3), (0, 1), (6, 4), (5, 4), (0, 2), (0, 6),
-                  (5, 3))
+        vertices2 = {0, 1, 2, 3, 4, 5, 6}
+        edges2 = {(0, 5), (4, 3), (0, 1), (6, 4), (5, 4), (0, 2), (0, 6),
+                  (5, 3)}
 
         def setUp(self):
             data_path = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyG.txt')
             self.graph1 = UndirectedGraph(filename=data_path)
-            self.graph2 = UndirectedGraph(edges=self.edges2)
+            self.graph2 = UndirectedGraph(vertices=self.vertices2,
+                                          edges=self.edges2)
 
         def test_size(self):
             self.assertEqual(13, self.graph1.size())
@@ -165,8 +227,8 @@ if __name__ == "__main__":
 
         def test_len(self):
             self.assertEqual(13, len(self.graph1))
-            self.assertEqual(8, len(self.graph2))
             self.assertEqual(0, len(UndirectedGraph()))
+            self.assertEqual(8, len(self.graph2))
 
         def test_order(self):
             self.assertEqual(13, self.graph1.order())
@@ -181,11 +243,20 @@ if __name__ == "__main__":
             self.assertFalse((6, 5) in self.graph2)
             self.assertFalse((1, 2) in UndirectedGraph())
 
+        def add_vertex(self):
+            self.graph1.add_vertex(13)
+            self.assertEqual(14, self.graph1.order())
+
+            # adding existing vertex does nothing
+            self.graph1.add_vertex(1)
+            self.assertEqual(14, self.graph1.order())
+
         def test_add_edge(self):
             self.graph1.add_edge(9, 7)
             self.assertEqual(14, self.graph1.size())
             self.assertEqual([7, 10, 11, 12], sorted(self.graph1.adj(9)))
             self.assertEqual([8, 9], sorted(self.graph1.adj(7)))
+            self.assertRaises(ValueError, self.graph1.add_edge, 3, 15)
 
             self.graph2.add_edge(2, 3)
             self.graph2.add_edge(2, 4)
@@ -237,6 +308,14 @@ if __name__ == "__main__":
                 "12: 9, 11"
             ]
             self.assertEqual("\n".join(graph1_out), str(self.graph1))
+
+        def test_repr(self):
+            self.assertEqual(
+                ''.join(['UndirectedGraph(',
+                         'vertices={0, 1, 2, 3, 4, 5, 6}, ',
+                         'edges={(0, 1), (4, 6), (4, 5), (0, 6), ',
+                         '(0, 5), (3, 4), (0, 2), (3, 5)})']),
+                repr(self.graph2))
 
 
     unittest.main()

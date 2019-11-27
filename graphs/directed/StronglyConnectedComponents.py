@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
         def test_symbol_graph_client(self):
 
-            # format of file is:
+            # format of file after first line (all nodes) is:
             #   0->1->2->3...
             # where 0 is food for (directed to) 1, 2, 3...
             data_file = path.join(path.abspath(path.dirname(__file__)),
@@ -139,13 +139,13 @@ if __name__ == "__main__":
                 components[scc.id(v)].append(graph.name_of(v))
             self.assertEqual([
                 ['fox'],
-                ['egret', 'snake', 'frog', 'fish', 'salamander', 'shrew'],
-                ['slug'],
-                ['worm'],
+                ['frog', 'salamander', 'shrew', 'egret', 'snake', 'fish'],
+                ['algae'],
                 ['ant'],
+                ['worm'],
+                ['slug'],
                 ['mosquito'],
-                ['grass'],
-                ['algae']
+                ['grass']
             ], components)
 
 

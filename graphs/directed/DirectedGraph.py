@@ -1,4 +1,21 @@
-"""Directed Graph: DirectedGraph"""
+"""Directed Graph: DirectedGraph
+
+A directed graph (digraph) is a graph (G) that contains a set of vertices (V)
+and a set of edges (E), where the first vertex in an edge tuple has a directed
+connection to the second vertex but not the other way around.
+
+For example, given the following digraph:
+
+    0 → 1
+    ↕ ↙ ↶
+    2 → 3
+
+We can describe the graph as follows:
+
+    G = (V, E)
+    V = {0, 1, 2, 3}
+    E = {(0, 1), (0, 2), (1, 2), (2, 0), (2, 3), (3, 3)}
+"""
 
 from collections import defaultdict
 
@@ -9,11 +26,13 @@ class DirectedGraph(Graph):
     """A simple directed graph. Contains zero-indexed vertices and edges as
     adjacency lists for each vertex."""
 
-    def __init__(self, *, filename=None, edges=None):
+    def __init__(self, *, filename=None, vertices=None, edges=None):
         """DirectedGraph constructor.
 
         :param filename: File with graph edges to load
         :type filename: str
+        :param vertices: A sequence of vertices to initialize
+        :type vertices: iterable
         :param edges: A sequence of edges (as tuples) to initialize
         :type edges: iterable
         """
@@ -22,6 +41,7 @@ class DirectedGraph(Graph):
         self._vertices = set()
         self._adj = defaultdict(list)
         self._read_file(filename)
+        self._load_vertices(vertices)
         self._load_edges(edges)
 
     def _read_file(self, filename):
@@ -33,9 +53,24 @@ class DirectedGraph(Graph):
 
         if filename is not None:
             with open(filename, 'rt') as fp:
-                for line in fp:
-                    self.add_edge(*tuple(map(lambda x: int(x),
-                                             line.rstrip().split(' '))))
+                for i, line in enumerate(fp):
+                    if i == 0:
+                        self._vertices = set(map(lambda x: int(x),
+                                                 line.rstrip().split(' ')))
+                    else:
+                        self.add_edge(*tuple(map(lambda x: int(x),
+                                                 line.rstrip().split(' '))))
+
+    def _load_vertices(self, vertices):
+        """Initializes vertices of a graph based on a sequence of integers.
+
+        :param vertices: Sequence of vertex integers to load
+        :type vertices: iterable
+        """
+
+        if vertices is not None:
+            for v in vertices:
+                self.add_vertex(v)
 
     def _load_edges(self, edges):
         """Initializes edges of a graph based on a sequence of edge tuples.
@@ -87,6 +122,15 @@ class DirectedGraph(Graph):
         v, w = edge
         return self._adj[v] and w in self._adj[v]
 
+    def add_vertex(self, v):
+        """Adds a vertex to the graph.
+
+        :param v: Vertex to add
+        :type v: int
+        """
+
+        self._vertices.add(v)
+
     def add_edge(self, v, w):
         """Creates an edge from vertex v to vertex w.
 
@@ -96,8 +140,11 @@ class DirectedGraph(Graph):
         :type w: int
         """
 
+        if not {v, w}.issubset(self._vertices):
+            raise ValueError(''.join(["One or more vertices in {} are not ",
+                                      "present in the graph."]).format((v, w)))
+
         if (v, w) not in self:
-            self._vertices |= {v, w}
             self._adj[v].append(w)
             self._size += 1
 
@@ -131,7 +178,7 @@ class DirectedGraph(Graph):
         :rtype: Digraph
         """
 
-        R = DirectedGraph()
+        R = DirectedGraph(vertices=self._vertices)
         for v in range(self.order()):
             for w in self.adj(v):
                 R.add_edge(w, v)
@@ -150,6 +197,19 @@ class DirectedGraph(Graph):
                                                             self._adj[v])))))
         return "\n".join(out)
 
+    def __repr__(self):
+        """Generates an official string representation of the graph with enough
+        information to recreate it.
+
+        :return: A string representation of the graph that can be eval'd
+        :rtype: str
+        """
+
+        return "{}(vertices={}, edges={})".format(
+            type(self).__name__,
+            self._vertices,
+            set(self))
+
 
 if __name__ == "__main__":
 
@@ -159,6 +219,7 @@ if __name__ == "__main__":
 
     class TestDigraph(unittest.TestCase):
 
+        vertices2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
         edges2 = ((0, 5),  (0, 1), (0, 6), (2, 0), (2, 3), (3, 5), (5, 4),
                   (6, 4), (6, 9), (7, 6), (8, 7), (9, 11), (9, 12), (9, 10),
                   (11, 12))
@@ -167,7 +228,8 @@ if __name__ == "__main__":
             data_file = path.join(path.abspath(path.dirname(__file__)),
                                   'data/tinyDG.txt')
             self.graph1 = DirectedGraph(filename=data_file)
-            self.graph2 = DirectedGraph(edges=self.edges2)
+            self.graph2 = DirectedGraph(vertices=self.vertices2,
+                                        edges=self.edges2)
 
         def test_size(self):
             self.assertEqual(22, self.graph1.size())
@@ -226,11 +288,10 @@ if __name__ == "__main__":
             self.assertEqual([0, 4, 8, 9], sorted(self.graph1.adj(6)))
             self.assertEqual(23, self.graph1.size())
 
-            self.graph1.add_edge(12, 13)
-            self.assertEqual([9, 13], sorted(self.graph1.adj(12)))
-            self.assertEqual([], sorted(self.graph1.adj(13)))
-            self.assertEqual(24, self.graph1.size())
-            self.assertEqual(14, self.graph1.order())
+            # cannot add edge to a non-existent node
+            self.assertRaises(ValueError, self.graph1.add_edge, 12, 13)
+            self.assertEqual(23, self.graph1.size())
+            self.assertEqual(13, self.graph1.order())
 
             self.graph2.add_edge(0, 7)
             self.assertEqual([1, 5, 6, 7], sorted(self.graph2.adj(0)))
@@ -311,6 +372,21 @@ if __name__ == "__main__":
                 "12: "
             ]
             self.assertEqual("\n".join(graph2_out), str(self.graph2))
+
+        def test_repr(self):
+            self.assertEqual(
+                ''.join([
+                    "DirectedGraph(",
+                    "vertices={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, ",
+                    "edges={(0, 1), (6, 4), (5, 4), (6, 9), (7, 6), (9, 10), ",
+                    "(0, 6), (2, 0), (9, 11), (0, 5), (2, 3), (8, 7), ",
+                    "(11, 12), (9, 12), (3, 5)})"]),
+                repr(self.graph2))
+
+            graph = eval(repr(self.graph2))
+            self.assertEqual(15, graph.size())
+            self.assertEqual(13, graph.order())
+
 
 
     unittest.main()

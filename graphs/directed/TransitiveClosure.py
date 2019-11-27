@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
         def test_symbol_graph_client(self):
 
-            # format of file is:
+            # format of file after first line (all nodes) is:
             #   0->1->2->3...
             # where 0 is food for (directed to) 1, 2, 3...
             data_file = path.join(path.abspath(path.dirname(__file__)),
