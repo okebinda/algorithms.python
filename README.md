@@ -18,6 +18,7 @@ A collection of algorithms and data structures in Python 3.
 
 * Stack
 * Queue
+* Minimum Priority Queue
 
 ### Symbol Tables
 
