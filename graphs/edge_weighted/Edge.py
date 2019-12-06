@@ -1,4 +1,4 @@
-"""Edge Weighted Graph: Edge"""
+"""Edge-Weighted Graph: Edge"""
 
 
 class Edge:

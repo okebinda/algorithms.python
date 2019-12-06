@@ -1,4 +1,4 @@
-"""Edge Weighted Graph: Prim's Minimum Spanning Tree"""
+"""Edge-Weighted Graph: Prim's Minimum Spanning Tree"""
 
 import math
 

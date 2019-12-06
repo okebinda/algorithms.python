@@ -54,6 +54,12 @@ A collection of algorithms and data structures in Python 3.
 * Strongly Connected Components Client
 * Transitive Closure Client
 
+#### Edge-Weighted Graphs
+
+* Edge
+* Edge-Weighted Graph
+* Prim's Minimum Spanning Tree Client
+
 ## Testing
 
 Example:

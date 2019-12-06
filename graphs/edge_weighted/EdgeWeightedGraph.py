@@ -1,4 +1,4 @@
-"""Edge Weighted Graph: Edge Weighted Graph"""
+"""Edge-Weighted Graph: Edge Weighted Graph"""
 
 from collections import defaultdict
 
