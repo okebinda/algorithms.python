@@ -8,6 +8,7 @@ class MinPriorityQueue:
         """MinPriorityQueue constructor."""
 
         self._pq = [None]
+        self._values = [None]
         self._n = 0
 
     def __len__(self):
@@ -37,7 +38,8 @@ class MinPriorityQueue:
         :type i: numeric
         """
         
-        self._pq.append((i, value))
+        self._pq.append(i)
+        self._values.append(value)
         self._n += 1
         self._swim(self._n)
 
@@ -52,10 +54,13 @@ class MinPriorityQueue:
         if not bool(self):
             raise Exception("{} is empty.".format(type(self).__name__))
 
-        value = self._pq[1][1]
+        value = self._values[1]
         self._pq[1], self._pq[self._n] = self._pq[self._n], self._pq[1]
+        self._values[1], self._values[self._n] = (self._values[self._n],
+                                                  self._values[1])
         self._n -= 1
         del self._pq[self._n + 1]
+        del self._values[self._n + 1]
         self._sink(1)
         return value
 
@@ -69,7 +74,34 @@ class MinPriorityQueue:
 
         if not bool(self):
             raise Exception("{} is empty.".format(type(self).__name__))
-        return self._pq[1][1]
+        return self._values[1]
+
+    def update_priority(self, value, i):
+        """Modifies the priority associated with given value.
+
+        :param value: Value of element to change priority of
+        :param i: New priority
+        :param i: numeric
+        """
+
+        index = self._values.index(value)
+        self._pq[index] = i
+
+        # swap with last and reorder
+        self._pq[index], self._pq[self._n] = self._pq[self._n], self._pq[index]
+        self._values[index], self._values[self._n] = (self._values[self._n],
+                                                      self._values[index])
+        self._swim(self._n)
+
+    def __contains__(self, value):
+        """Determines if a value is in the priority queue.
+
+        :param value: Value of element to search for
+        :return: True if value is in priority queue, otherwise False
+        :rtype: bool
+        """
+
+        return value in self._values
 
     def _swim(self, k):
         """Re-orders the heap from the bottom up.
@@ -78,8 +110,10 @@ class MinPriorityQueue:
         :type k: int
         """
 
-        while k > 1 and self._pq[k//2][0] > self._pq[k][0]:
+        while k > 1 and self._pq[k//2] > self._pq[k]:
             self._pq[k//2], self._pq[k] = self._pq[k], self._pq[k//2]
+            self._values[k//2], self._values[k] = (self._values[k],
+                                                   self._values[k//2])
             k //= 2
 
     def _sink(self, k):
@@ -91,11 +125,12 @@ class MinPriorityQueue:
 
         while k * 2 <= self._n:
             j = k * 2
-            if j < self._n and self._pq[j][0] > self._pq[j+1][0]:
+            if j < self._n and self._pq[j] > self._pq[j+1]:
                 j += 1
-            if not self._pq[k][0] > self._pq[j][0]:
+            if not self._pq[k] > self._pq[j]:
                 break
             self._pq[k], self._pq[j] = self._pq[j], self._pq[k]
+            self._values[k], self._values[j] = self._values[j], self._values[k]
             k = j
 
 
@@ -152,6 +187,25 @@ if __name__ == "__main__":
         def test_peek(self):
             self.assertEqual("b", self.pq.peek())
             self.assertRaises(Exception, MinPriorityQueue().peek)
+
+        def test_update_priority(self):
+            self.pq.update_priority('d', 1)
+            self.assertEqual("d", self.pq.peek())
+            self.assertEqual(5, len(self.pq))
+
+            self.pq.update_priority('g', 5)
+            self.assertEqual("d", self.pq.peek())
+            self.assertEqual(5, len(self.pq))
+
+            self.pq.update_priority('c', 0)
+            self.assertEqual("c", self.pq.peek())
+            self.assertEqual(5, len(self.pq))
+
+            self.assertRaises(ValueError, self.pq.update_priority, 'z', 3)
+
+        def test_contains(self):
+            self.assertTrue('b' in self.pq)
+            self.assertFalse('z' in self.pq)
 
 
     unittest.main()
