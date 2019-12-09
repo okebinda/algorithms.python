@@ -1,4 +1,4 @@
-"""Undirected Graph: Undirected Symbol Graph"""
+"""Graphs: Symbol Graph"""
 
 from .Graph import Graph
 

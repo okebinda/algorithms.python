@@ -36,6 +36,7 @@ A collection of algorithms and data structures in Python 3.
 
 * Graph Abstract Base Class
 * Symbol Graph
+* Union-Find
 
 #### Undirected Graphs
 
@@ -59,6 +60,7 @@ A collection of algorithms and data structures in Python 3.
 * Edge
 * Edge-Weighted Graph
 * Prim's Minimum Spanning Tree Client
+* Kruskal's Minimum Spanning Tree Client
 
 ## Testing
 
