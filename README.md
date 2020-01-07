@@ -62,6 +62,11 @@ A collection of algorithms and data structures in Python 3.
 * Prim's Minimum Spanning Tree Client
 * Kruskal's Minimum Spanning Tree Client
 
+#### Edge-Weighted Directed Graphs
+
+* Directed Edge
+* Edge-Weighted Directed Graph
+
 ## Testing
 
 Example:
