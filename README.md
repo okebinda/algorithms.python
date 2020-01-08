@@ -66,6 +66,7 @@ A collection of algorithms and data structures in Python 3.
 
 * Directed Edge
 * Edge-Weighted Directed Graph
+* Dijkstra's Shortest Path Client
 
 ## Testing
 
